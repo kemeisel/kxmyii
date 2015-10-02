@@ -1,5 +1,8 @@
 <?php
-
+/*
+	KXMController
+	Base class for MY controller classes.
+*/
 class KXMController extends Controller
 {
 	/**
@@ -10,8 +13,8 @@ class KXMController extends Controller
 	
 	public function init()
 	{
-		// Since all controllers should respond to the call to make context 
-		// navigation, the functionality is factored out to here
+		// Since all controllers should respond to the call to make context navigation, the functionality is factored out to here...
+		
 		$announcer = Yii::app()->announcer; /* var $announcer KXMAnnouncer */
 		$announcer->addListener( $this, 'renderContextMenu', 'willRenderContextMenu' );
 
@@ -19,44 +22,43 @@ class KXMController extends Controller
 	}
 	
 	/**
-	 * @return string the controller model
+	 * model
+	 * @brief Returns the name of the model associated with this controller.  Note - this assumes a single model/single controller paradigm which is (admittedly) pretty narrow.  When the revolution happens, this kind of built-in rigidity will be the first code against the wall...
+	 * @return String the controller model
 	 */
 	public function model()
 	{
 		$model = ucfirst(strtolower($this->id));
-		/*
-		$id = null;
-		$model_obj = $model::model()->findByPk($id);
-		if( $model_obj === null ){
-			$model_obj = new $model;
-		}
-		return $model_obj;
-		*/
+		
 		return $model;
 	}
 	
 	/**
-	 * @return array action filters
+	 * filters
+	 * @brief Defines and returns Action limits and filters
+	 * @return Array action filters
 	 */
 	public function filters()
 	{
 		return array(
-			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
+			'accessControl',      // perform access control for CRUD operations
+			'postOnly + delete',  // we only allow deletion via POST request
 		);
 	}
 
 	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 * 
-	 * '*' = all users
-	 * '?' = anonymous users
-	 * '@' = authenticated users
+	 * accessRules
+	 * @brief Specifies the access control rules. This method is used by the 'accessControl' filter.
+	 * @return Array access control rules
 	 */
 	public function accessRules()
 	{
+		/* FYI:
+		 * '*' = all users
+		 * '?' = anonymous users
+		 * '@' = authenticated users
+		 */
+		 
 		$rules = array(
 			// By default all authenticated users may Read
 			array(
@@ -84,14 +86,17 @@ class KXMController extends Controller
 			),
 		);
 		
+		// Rules defined here supersede rules defined in the parent (Likewise for all derived classes of *this* class)
 		return array_merge($rules, parent::accessRules());
 	}
 
 	/**
-	 * Default visibility rules
+	 * visibilityRules
+	 * @brief Default visibility rules
 	 */
 	public function visibilityRules()
 	{
+		// KXM The $user object should be able to handle a null argument, rather than waiting for RBAC implementation - there's no good reason to have to come here to turn nav on and off when it could (should) be handled in the RBAC module.  Get your shit together, dude...
 		$rules = array(
 			'create' => array(
 				true,
@@ -128,9 +133,8 @@ class KXMController extends Controller
 	
 	/**
 	 * renderContextMenu
-	 * The responder to the context menu creation announcement.  
-	 * Specific HMRCControllers have to overload this function 
-	 * for anything to show up in the context menu.
+	 * @brief The responder to the context menu creation announcement. Specific controllers have to overload this function for anything to show up in the context menu.
+	 * @param KXMAnnouncement The announcement object
 	 */
 	public function renderContextMenu( KXMAnnouncement $announcement )
 	{
@@ -227,7 +231,12 @@ class KXMController extends Controller
 	}
 	
 	/**
-	 * @return array Url variables with announcement
+	 * announceUrl
+	 * @brief Creates and raises announcement of a particular Action
+	 * @param $name String The action name in question
+	 * @param $args Array An array of URL variables
+	 * @param $announce Boolean Whether to announce this URL
+	 * @return Array Url variables with announcement
 	 */
 	public function announceUrl( $name, $args = array(), $announce = true )
 	{
@@ -250,7 +259,10 @@ class KXMController extends Controller
 	}
 	
 	/**
-	 * Parse visibility rules
+	 * parseVisible
+	 * @brief Parse visibility rules
+	 * @param String The name of the item whose visibility is to be evaluated
+	 * @return Boolean Whether the item should be displayed
 	 */
 	public function parseVisible($item)
 	{

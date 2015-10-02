@@ -1,8 +1,8 @@
 <?php
-	/*
-		KXMCActiveRecord
-		Base class for active record classes.  This class should be extended for any custom database connections
-	*/
+/*
+	KXMCActiveRecord
+	Base class for MY active record classes.  This class should be extended for any custom database connections, overriding getCustomDbConnection() in the process
+*/
 class KXMCActiveRecord extends CActiveRecord
 {
 	private $_attributeLabels = null;
@@ -54,8 +54,8 @@ class KXMCActiveRecord extends CActiveRecord
 	}
 	
 	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
+	 * model
+	 * @brief Returns the static model of the specified AR class.  Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
 	 * @return CompanyConfig the static model class
 	 */
@@ -65,7 +65,9 @@ class KXMCActiveRecord extends CActiveRecord
 	}
 	
 	/**
-	 * @return String the field name of the primary key, by convention [CLASS NAME]_ID
+	 * getId
+	 * @brief Retrieve the field name of the primary key of this model, by convention [CLASS NAME]_ID
+	 * @return String the field name of the primary key
 	 */
 	public function getId()
 	{
@@ -74,54 +76,78 @@ class KXMCActiveRecord extends CActiveRecord
 	}
 	
 	/**
+	 * rules
+	 * @brief Defines (and returns) validation rules for a model, against which update and create actions are tested.
 	 * @return array validation rules for model attributes.
-	 * Define validation rules in the form:
-	 * 		array(
-	 * 			[attribute list as csv], 
-	 * 			[validator], 
-	 * 			[option] => [scenario]
-	 * 		)
-	 * 		
-	 * Examples of option => scenario:
-	 * 		'on' => 'search',
-	 * 		'except' => 'auto'
-	 * 
 	 */
 	public function rules()
 	{
+		 /*
+		 * Define validation rules in the form:
+		 * 		array(
+		 * 			[attribute list as csv], 
+		 * 			[validator], 
+		 * 			[option] => [scenario]
+		 * 		)
+		 * 		
+		 * Examples of option => scenario:
+		 * 		'on' => 'search',
+		 * 		'except' => 'auto'
+		 */
+
+		// Default rules for attributes set as not nullable:
 		return array(
-			// Default rules for attributes set as not nullable:
+			// The should be required,
 			array(implode(', ', $this->requiredAttributes()), 'required'),
+			
+			// and they should be marked as 'safe' for input
 			array(implode(', ', $this->requiredAttributes()), 'safe'),
 		);
 	}
 	
 	/**
-	 * @return array of required attributes
+	 * requiredAttributes
+	 * @brief Compiles an array of non-nullable table attributes
+	 * @param $tableName String I think this is deprecated, a remnant of an earlier incarnation of the function, but now I'm afraid to remove it...
+	 * @return Array Required attributes
 	 */
+	// KXM Now that we're tapping into $this->getTableSchema(), is $tableName even necessary?
 	public function requiredAttributes($tableName = null)
 	{
+		// Define default (empty) array
 		$retVal = array();
 		
+		// If we haven't already done this...
 		if( $this->_requiredAttributes == null ){
+			
+			// ...then get the schema...
 			$schema = $this->getTableSchema();
+			
+			// ...and cycle over the columns...
 			foreach($schema->columns as $name => $attributes){
+				// ...(skipping the ID)...
+				// KXM Probably better to add 'ID' to the filtered attributes list of contextAttributes() and tap into it there... study on that, as the thinking on primary key field names is morphing...
 				if( $name == 'id' )
 					continue;
-
+				
+				// ...adding any columns for which NULL is not allowed.
 				if($attributes->allowNull == false){
 					$retVal[$name] = $name;
 				}
 			}
 			
+			// Set the cached array
 			$this->_requiredAttributes = $retVal;
 		}
 		
+		// Return the (perhaps newly) cached array
 		return $this->_requiredAttributes;
 	}
 	
 	/**
-	 * @return array dynamic attribute labels (name=>label)
+	 * attributeLabels
+	 * @brief Dynamically creates an array of table attribute/label names
+	 * @return Array dynamic attribute labels (name=>label)
 	 **/
 	public function attributeLabels()
 	{
@@ -141,17 +167,18 @@ class KXMCActiveRecord extends CActiveRecord
 	}
 	
 	/**
-	 * Returns the CDetailView attributes appropriate for the context
+	 * contextAttributes
+	 * @brief Compiles a filtered array of attribute labels appropriate for general use.  Note this will likely be overridden in any derived class, but it does provide a more intellegent starting point
+	 * @return Array Returns the CDetailView attributes appropriate for the context
 	 */
 	public function contextAttributes()
 	{
 		// Get the complete set
 		$all_keys = array_keys($this->attributeLabels());
 		
-		// Define those keys that are unlikely to be useful or that 
-		// should not be exposed...
+		// Define those keys that are unlikely to be useful or that should not be exposed...
+		// KXM This feels kludgey, but it serves the purpose... I could pull it out and stick in in the main config file, but anything beyond that is overkill - most derived classes will override the function anyway...
 		$filter = array(
-			/**/
 			'CREATED_BY',
 			'CREATE_BY',
 			//'CREATE_DT',
@@ -180,7 +207,6 @@ class KXMCActiveRecord extends CActiveRecord
 			'update_by',
 			'update_dt',
 			'updated_by',
-			/**/
 		);
 		
 		// ...and filter em out.
