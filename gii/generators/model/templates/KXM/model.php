@@ -60,6 +60,10 @@ class <?php echo $modelClass; ?> extends KXMCActiveRecord
 		// some hassle is probably a good thing...
 		$local = array(
 			array(implode(', ', $this->requiredAttributes()), 'safe'),
+			
+			// Default rules for all the rest of the variables.  
+			// Like above, this default case should likely be overridden
+			array(implode(', ', $this->contextAttributes()), 'safe'),
 		);
 		
 		return array_merge($local, parent::rules());
