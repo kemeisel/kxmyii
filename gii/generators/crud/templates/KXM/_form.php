@@ -24,22 +24,26 @@
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
 
 	<?php echo "<?php echo \$form->errorSummary(\$model); ?>\n"; ?>
+	
+	<?php echo "<?php foreach(\$model->contextAttributes() as \$column){ 
+	\$html_options = array();
+	
+	// First, get the column object...
+	\$thisColumn = \$model->tableSchema->columns[\$column];
+	
+	// ...and see if this column is the primary key.
+	if(\$thisColumn->isPrimaryKey) { 
+		// If so, then set the read-only html option:
+		\$html_options['readOnly'] = 'readOnly';
+	}
+	
+	// In any case, display the generic text-box input
+	?>\n"; ?>
+	<?php echo "\t<?php echo \$form->labelEx(\$model, \$column); ?>\n"; ?>
+	<?php echo "\t<?php echo \$form->textField(\$model, \$column); ?>\n"; ?>
+	<?php echo "\t<?php echo \$form->error(\$model, \$column); ?>\n"; ?>
+	<?php echo "<?php } // end foreach ?>\n"; ?>
 
-<?php
-foreach($this->tableSchema->columns as $column)
-{
-	if($column->autoIncrement)
-		continue;
-?>
-	<div class="row">
-		<?php echo "<?php echo ".$this->generateActiveLabel($this->modelClass,$column)."; ?>\n"; ?>
-		<?php echo "<?php echo ".$this->generateActiveField($this->modelClass,$column)."; ?>\n"; ?>
-		<?php echo "<?php echo \$form->error(\$model,'{$column->name}'); ?>\n"; ?>
-	</div>
-
-<?php
-}
-?>
 	<div class="row buttons">
 		<?php echo "<?php echo CHtml::submitButton(\$model->isNewRecord ? 'Create' : 'Save'); ?>\n"; ?>
 	</div>
