@@ -40,7 +40,7 @@
 	// In any case, display the generic text-box input
 	?>\n"; ?>
 	<?php echo "\t<?php echo \$form->labelEx(\$model, \$column); ?>\n"; ?>
-	<?php echo "\t<?php echo \$form->textField(\$model, \$column); ?>\n"; ?>
+	<?php echo "\t<?php echo \$form->textField(\$model, \$column, \$html_options); ?>\n"; ?>
 	<?php echo "\t<?php echo \$form->error(\$model, \$column); ?>\n"; ?>
 	<?php echo "<?php } // end foreach ?>\n"; ?>
 
