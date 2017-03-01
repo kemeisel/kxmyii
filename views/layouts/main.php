@@ -51,7 +51,6 @@
 	<div class="clear"></div>
 
 	<div id="footer">
-		Copyright &copy; 2015 Regents of University of Michigan
 	</div><!-- footer -->
 
 </div><!-- page -->
