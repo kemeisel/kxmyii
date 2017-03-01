@@ -75,7 +75,7 @@
 		){
 			if( ! is_object( $listener ) ){
 				throw new CException( Yii::t( 
-					'HMRC', 
+					'KXM',
 					'Listener must be an object for {event} event.',
 					array( '{event}' => $eventName )
 				));
@@ -114,7 +114,7 @@
 
 
 	/**
-	 * HMRCAnnouncement creates an object to handle  
+	 * KXMAnnouncement creates an object to handle
 	 * communication between the Announcer and Listeners.
 	 */
 	class KXMAnnouncement 

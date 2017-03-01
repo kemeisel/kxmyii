@@ -138,7 +138,7 @@ class KXMController extends Controller
 	 */
 	public function renderContextMenu( KXMAnnouncement $announcement )
 	{
-		$app         = Yii::app(); /* @var $app HMRCApplication */
+		$app         = Yii::app(); /* @var $app KXMApplication */
 		
 		$user        = $app->user; /* @var $user CWebUser */
 		$request     = $app->getRequest();
@@ -150,7 +150,7 @@ class KXMController extends Controller
 		$m           = $this->model();
 		$label_name  = $m::model()->generateAttributeLabel($m::model()->tableName());
 		
-		$menu        = $announcement->sender; /* @var $menu HMRCMenu */
+		$menu        = $announcement->sender; /* @var $menu KXMMenu */
 		//$menu->items = array();
 		
 		// If the current route references this controller then respond

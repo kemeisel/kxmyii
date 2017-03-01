@@ -1,6 +1,6 @@
 <?php
 	/**
-	 * HMRCMenu
+	 * KXMMenu
 	 *
 	 * A generalized menu class with announcement
 	 */
