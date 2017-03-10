@@ -3,7 +3,7 @@ KXM Yii implementation details
 
 Overview
 ---------
-The KXM implementation leverages improvements to the base Yii v1.1x web application functionality.  At the heart of the improvements are three key concepts:
+The KXM implementation leverages improvements to the base Yii v1.1x web application functionality.  At the heart of the improvements are three key observations:
  1. Modifying the vanilla Yii sidebar navigation is time consuming, routine, and may be abstracted
  1. Customizations to gii-generated scaffolds are routine and predictable
  1. The vanilla Yii install lacks some convenience methods and features developed (and routinely redeveloped) over time
@@ -36,9 +36,9 @@ To derive the benefits
  - The base class for controller generation (under crud generation) must be KXMController
 
 ### Installation
- 1. If this is a new Yii framework installation, migrate the KXM generators into the proper locations, usually
-    1. yii/framework/gii/generators/model/templates
-    1. yii/framework/gii/generators/crud/templates
+ 1. If this is a new Yii framework installation, migrate the KXM generators into the proper locations, usually  
+    `yii/framework/gii/generators/model/templates`  
+    `yii/framework/gii/generators/crud/templates`
  1. Generate yii webapp as directed:  
     `yiic webapp [app directory]`
  1. By convention, I change the name of the standard code directory from `protected` to `_application`.  If you do so, then change the configuration reference in `[code directory]/index.php` to reflect the new location.  
