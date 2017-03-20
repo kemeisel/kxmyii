@@ -16,7 +16,7 @@
 		/**
 		 * @param string $eventName - name of the event $sender is announcing
 		 * @param object $sender - object announcing the event
-		 * @param UMEAnnouncement $announcement - object containing 
+		 * @param KXMAnnouncement $announcement - object containing
 		 * @return void
 		 */
 		public function announce(
@@ -47,7 +47,7 @@
 			
 					} else {
 						throw new CException(Yii::t(
-							'UME',
+							'KXM',
 							'Event "{class}.{method}" is not defined.',
 							array( '{class}' => get_class($listener['object']), '{method}' => $listener['callback'] )
 						));
